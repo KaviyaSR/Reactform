@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
 
+const initialValue= {
+    Firstname:'',
+    Lastname:'',
+    Address:'',
+    Emailid:'',
+    Phonenumber:'',
+    FirstnameError:'',
+    LastnameError:'',
+    EmailidError:'',
+    PhonenumberError:''
+}
+
 class Form extends Component {
     constructor(props){
         super(props)
 
-        this.state={
-            Firstname:'',
-            Lastname:'',
-            Address:'',
-            Emailid:'',
-            Phonenumber:'',
-            FirstnameError:'',
-            LastnameError:'Field is Empty',
-            AddressError:'Field is Empty',
-            EmailidError:'Field is Empty',
-            PhonenumberError:'Field is Empty'
-
-
-        }
+        this.state={initialValue} 
     }
+
+                
     nameChange=(change) => {
      this.setState({
          Firstname :change.target.value
@@ -46,58 +47,78 @@ class Form extends Component {
        phnChange=(change) => {
         this.setState({
             Phonenumber:change.target.value
-        })
-       }
+        })}
 
-       Validate=()=>{
+       validate=()=>{
            let FirstnameError="";
+           let LastnameError="";
+           let EmailidError="";
+           let PhonenumberError ="";
 
-           if(!this.state.Firstname){ 
-            FirstnameError="Name cannot be blank";
+           if (!this.state.Firstname){
+            FirstnameError="First Name cannot be blank";
            }
-           if(FirstnameError){
-               this.setState({FirstnameError});
-               return false;
+
+           if (!this.state.Lastname){
+            LastnameError="Last Name cannot be blank";
+           }
+
+           if (!this.state.Emailid.includes('@')){
+            EmailidError="Invalid email id";
+           }
+
+           if (!this.state.Phonenumber.length >= 10){
+            PhonenumberError="Enter correct Number";
+           }
+
+
+
+           if (FirstnameError || LastnameError|| EmailidError|| PhonenumberError){
+               this.setState({FirstnameError,LastnameError,EmailidError,PhonenumberError});
+               return false
            }
            return true;
-       }
-
-       submitting=() =>
-       {
-           alert (`"Welcome" ${this.state.Firstname} ${this.state.Lastname}`)
-       }
-  handleSubmit=(change) => {
-      change.preventDefault();
-       const isValid =this.Validate();
-       if(isValid){
-           console.log(this.state)
-       }
-
-  }
+        }
+      
+        handleSubmit=(event)=>{
+            event.preventDefault();
+            const isValid= this.validate();
+            if(isValid){
+            console.log(this.state)
+            this.setState(initialValue);
+        }
+        
+        }
+    
+  
     render() {
         return (
            <form onSubmit={this.handleSubmit}>
                <label>Firstname</label>
                <input type= "text" value={this.state.Firstname} 
                onChange={this.nameChange}></input><br></br>
-               
+               <div style= {{  fontSize:10, color: "red"}}>{this.state.FirstnameError}</div>
                <br></br>
 
                <label>Lastname</label>
                 <input type= "text" value={this.state.Lastname} 
-                onChange={this.lnameChange}></input><br></br><br></br>
+                onChange={this.lnameChange}></input><br></br>
+                <div style= {{  fontSize:10, color: "red"}}>{this.state.LastnameError}</div>
+                <br></br>
 
-               <label>Address</label>
-               <input type= "text" value={this.state.Address} 
-               onChange={this.addChange}></input><br></br><br></br>
+              
 
-               <label>Emailid</label>
-               <input type= "text" value={this.state.Emailid} 
-               onChange={this.mailChange}></input><br></br><br></br>
+               <label >Email</label>
+               <input style={{marginLeft: 85}} type= "text" value={this.state.Emailid} 
+               onChange={this.mailChange}></input><br></br>
+               <div style= {{  fontSize:10, color: "red"}}>{this.state.EmailidError}</div>
+               <br></br>
 
                <label>Phone number</label>
-               <input type= "text" value={this.state.Phonenumber} 
-               onChange={this.phnChange}></input><br></br><br></br>
+               <input style={{marginLeft: 26}} type= "text" value={this.state.Phonenumber} 
+               onChange={this.phnChange}></input><br></br>
+               <div style= {{  fontSize:10, color: "red"}}>{this.state.PhonenumberError}</div>
+               <br></br>
 
                <button type="Submit" onClick={this.submitting}> Submit</button>
            </form>
